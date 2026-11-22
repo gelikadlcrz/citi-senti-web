@@ -1,0 +1,32 @@
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Node.js / frontend
+node_modules/
+dist/
+coverage/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local development
+.DS_Store
+.idea/
+.vscode/
+*.log
+
+# ML artifacts and private data
+/backend/model_artifacts/
+/data/
+
+# Local database files
+*.sqlite3
+*.db
