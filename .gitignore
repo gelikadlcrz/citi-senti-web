@@ -30,3 +30,6 @@ __pycache__/
 # Local database files
 *.sqlite3
 *.db
+
+# Supabase temporary files
+supabase/.temp/
