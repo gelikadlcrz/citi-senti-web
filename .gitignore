@@ -33,3 +33,6 @@ __pycache__/
 
 # Supabase temporary files
 supabase/.temp/
+
+# Private research seed data
+backend/seed_data/
