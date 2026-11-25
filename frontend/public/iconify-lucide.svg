@@ -29,5 +29,8 @@
     <symbol id="badge-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 3 2 3 0 1 3 3 3-2 3v3l-3 2-2 4-3-1-3 1-2-4-3-2v-3l-2-3 3-3 1-3h3l3-2Z"/><path d="M12 7v6m0 3h.01"/></symbol>
     <symbol id="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z"/></symbol>
     <symbol id="shuffle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m18 14 4 4-4 4m0-20 4 4-4 4M2 6h3a4 4 0 0 1 3 1.5l8 9A4 4 0 0 0 19 18h3M2 18h3a4 4 0 0 0 3-1.5l2-2.3M14 9.8l2-2.3A4 4 0 0 1 19 6h3"/></symbol>
+    <symbol id="book-open-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 7v14M3 5h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5v14h-5a4 4 0 0 0-4 2 4 4 0 0 0-4-2H3zM6 9h2m-2 4h2m8-4h2m-2 4h2"/></symbol>
+    <symbol id="copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 7v5h-5M4 17v-5h5M6.1 7a7 7 0 0 1 11.7-1L20 9M4 15l2.2 3a7 7 0 0 0 11.7-1"/></symbol>
   </defs>
 </svg>

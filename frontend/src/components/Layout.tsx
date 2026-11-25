@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { AnalysisFlowContext } from "./AnalysisFlowContext";
 import { useLocation } from "react-router";
 import { Sidebar, useSidebarState } from "./Sidebar";
 import { IconifyIcon } from "./IconifyIcon";
@@ -6,6 +8,12 @@ import { IconifyIcon } from "./IconifyIcon";
 export function Layout({ children }: { children: ReactNode }) {
   const sidebar = useSidebarState();
   const location = useLocation();
+  const [resultsVisible, setResultsVisible] = useState(false);
+  const [contributionDraft, setContributionDraft] = useState<string | null>(null);
+  useEffect(() => {
+    if (location.pathname !== "/contribute-feedback") setContributionDraft(null);
+  }, [location.pathname]);
+  const showingResults = location.pathname === "/analyze-feedback" && resultsVisible;
   const explore =
     location.pathname.startsWith("/explore") || location.pathname === "/";
   const placeholderHeading: Record<string, string> = {
@@ -14,7 +22,7 @@ export function Layout({ children }: { children: ReactNode }) {
     "/public-insights": "Public Insights",
     "/admin/login": "Admin Login",
   };
-  const heading = explore
+  const heading = showingResults ? "Analysis Results" : explore
     ? "Explore CITI-Senti"
     : (placeholderHeading[location.pathname] ?? "CITI-Senti");
   const pageSubheading: Record<string, string> = {
@@ -22,7 +30,7 @@ export function Layout({ children }: { children: ReactNode }) {
     "/public-insights":
       "Privacy-safe, aggregated statistics from eligible approved feedback.",
   };
-  const subheading = explore
+  const subheading = showingResults ? "Aspect and sentiment predictions for your submitted comment." : explore
     ? "Learn about the research, model, and its policy-related aspect taxonomy."
     : (pageSubheading[location.pathname] ??
       "This section will be connected to the corresponding website feature.");
@@ -47,7 +55,13 @@ export function Layout({ children }: { children: ReactNode }) {
           </div>
         </header>
         <main className="page-main" id="main-content">
-          {children}
+          <AnalysisFlowContext.Provider value={{
+            setResultsVisible,
+            contributionDraft: location.pathname === "/contribute-feedback" ? contributionDraft : null,
+            setContributionDraft,
+          }}>
+            {children}
+          </AnalysisFlowContext.Provider>
         </main>
       </div>
     </div>

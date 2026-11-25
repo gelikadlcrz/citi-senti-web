@@ -1,0 +1,40 @@
+/* Results-only styles. The application shell and input composer retain Phase 6 styling. */
+.analysis-results-page {display:grid;gap:20px;padding-top:10px;min-width:0;}
+.analysis-original h2 {line-height:1.4;font-family:inherit;font-size:15px;font-weight:400;color:var(--muted);margin:0 0 8px;}
+.analysis-original-comment {min-height:132px;background:#dce2da;border-radius:24px;padding:27px 36px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;color:var(--ink);}
+.analysis-completed {display:flex;align-items:center;gap:19px;min-height:98px;padding:22px 24px;}
+.analysis-completed>.ui-icon {color:var(--forest);}
+.analysis-completed h2,.analysis-detected h2 {font-size:23px;letter-spacing:-.35px;line-height:1.2;margin:0 0 2px;}
+.analysis-completed h2:focus {outline:none;}
+.analysis-completed p,.analysis-detected p {font-size:14px;line-height:1.5;margin:0;}
+.analysis-sentiment-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;}
+.analysis-sentiment-card {display:flex;align-items:center;gap:20px;padding:20px 24px;min-height:120px;}
+.analysis-sentiment-card.positive {--sentiment-color:var(--forest);--sentiment-ring:#789486;}
+.analysis-sentiment-card.neutral {--sentiment-color:var(--gold);--sentiment-ring:#c8b57c;}
+.analysis-sentiment-card.negative {--sentiment-color:var(--burgundy);--sentiment-ring:#b9868d;}
+.analysis-sentiment-dot {width:32px;height:32px;flex:0 0 32px;display:grid;place-items:center;border:2px solid var(--sentiment-ring);border-radius:50%;}
+.analysis-sentiment-dot::after {content:'';width:23px;height:23px;border-radius:50%;background:var(--sentiment-color);}
+.analysis-sentiment-title {display:block;color:var(--muted);font-size:18px;line-height:1.4;}
+.analysis-sentiment-number {display:block;font:700 44px/1.13 var(--serif);color:var(--ink);margin-top:3px;font-variant-numeric:tabular-nums;}
+.analysis-detected {padding:23px 24px 28px;min-height:352px;}
+.analysis-table-wrap {margin-top:15px;overflow-x:auto;}
+.analysis-results-table {width:100%;border-collapse:separate;border-spacing:0;table-layout:auto;font-size:14px;color:var(--muted);text-align:left;}
+.analysis-results-table th {background:#e2e8e3;padding:12px;font-weight:700;}
+.analysis-results-table th:first-child {width:12%;border-radius:4px 0 0 4px;}
+.analysis-results-table th:last-child {width:26%;border-radius:0 4px 4px 0;}
+.analysis-results-table td {padding:11px 12px;border-bottom:1px solid var(--border);font-weight:650;vertical-align:middle;line-height:1.45;}
+.analysis-code-pill,.analysis-sentiment-pill {display:inline-flex;align-items:center;justify-content:center;border-radius:100px;padding:6px 12px;font-size:13px;line-height:20px;white-space:nowrap;font-weight:700;}
+.analysis-code-pill {background:#e2e8e3;color:#53635a;}
+.analysis-sentiment-pill.positive {background:#cddbd2;color:var(--forest);}
+.analysis-sentiment-pill.neutral {background:#eee5cd;color:#765e20;}
+.analysis-sentiment-pill.negative {background:#e7d6d8;color:var(--burgundy);}
+.analysis-results-table .analysis-empty-result {font-weight:400;text-align:center;padding:30px 12px;line-height:1.6;}
+.analysis-results-actions {display:flex;align-items:center;gap:20px;flex-wrap:wrap;}
+.analysis-results-actions .secondary {color:var(--muted);}
+.analysis-results-actions .secondary .ui-icon {color:var(--ink);}
+.analysis-contribute-button {margin-left:auto;}
+.analysis-copy-fallback {font-size:13px;color:var(--muted);}
+.analysis-copy-fallback p {margin:0 0 8px;}
+.analysis-copy-fallback textarea {width:100%;min-height:150px;padding:12px;border:1px solid var(--border);border-radius:12px;resize:vertical;color:var(--ink);background:#fff;}
+@media(max-width:850px) {.analysis-sentiment-grid {gap:12px;}.analysis-sentiment-card {padding:15px;gap:12px;}.analysis-detected {min-height:0;}.analysis-original-comment {padding:22px;}}
+@media(max-width:600px) {.analysis-results-page {gap:14px;padding-top:0;}.analysis-sentiment-grid {gap:8px;}.analysis-sentiment-card {min-height:98px;padding:12px 8px;gap:6px;justify-content:center;flex-wrap:wrap;text-align:center;}.analysis-sentiment-dot {width:22px;height:22px;flex-basis:22px;}.analysis-sentiment-dot::after {width:14px;height:14px;}.analysis-sentiment-title {font-size:13px;}.analysis-sentiment-number {font-size:30px;}.analysis-completed {padding:16px;gap:12px;}.analysis-completed>.ui-icon {width:32px;height:32px;}.analysis-detected {padding:18px 14px;}.analysis-completed h2,.analysis-detected h2 {font-size:20px;}.analysis-results-table {font-size:12px;}.analysis-results-table th,.analysis-results-table td {padding:9px 6px;}.analysis-code-pill,.analysis-sentiment-pill {padding:4px 8px;font-size:11px;}.analysis-results-actions {gap:10px;}.analysis-results-actions .secondary {flex:1;}.analysis-contribute-button {flex:1 0 100%;margin-left:0;}.analysis-original-comment {min-height:100px;}}

@@ -13,6 +13,7 @@ export function AnalyzeFeedbackPage() {
   const [error, setError] = useState('')
   const [samplesOpen, setSamplesOpen] = useState(false)
   const request = useRef<AbortController | null>(null)
+  const focusAfterClear = useRef(false)
   const inputRef = useRef<HTMLTextAreaElement>(null)
   const sampleControl = useRef<HTMLDivElement>(null)
   const sampleButton = useRef<HTMLButtonElement>(null)
@@ -28,7 +29,15 @@ export function AnalyzeFeedbackPage() {
     return () => document.removeEventListener('pointerdown', outside)
   }, [samplesOpen])
 
+  useEffect(() => {
+    if (!result && focusAfterClear.current) {
+      focusAfterClear.current = false
+      inputRef.current?.focus()
+    }
+  }, [result])
+
   function clear() {
+    if (result) focusAfterClear.current = true
     setComment('')
     setResult(null)
     setError('')
