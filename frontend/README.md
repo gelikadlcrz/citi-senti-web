@@ -1,32 +1,26 @@
-# React + TypeScript + Vite
+# CITI-Senti frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React + TypeScript + Vite. The Explore section is implemented at three URLs:
 
-Currently, two official plugins are available:
+- `/explore/aspects` — interactive policy-related aspect reference (A01–A11).
+- `/explore/how-it-works` — multilingual Glot500-m workflow, examples, limitations and privacy.
+- `/explore/about` — research overview, objectives, methodology, team placeholder and disclaimer.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The root route redirects to `/explore/aspects` until the team's Analyze Feedback homepage is integrated. The sidebar also contains temporary routes for Analyze Feedback, Contribute Feedback, Public Insights, and Admin Login; update the `<Route>` entries in `src/App.tsx` when those pages are ready. Central link destinations are in `src/components/Sidebar.tsx` under `paths`.
 
-## React Compiler
+## Run locally
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+pnpm install
+pnpm dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Open the local Vite URL and navigate between the Explore tabs. Click the sidebar button to collapse/expand it; on mobile the sidebar becomes a drawer. The collapse preference is stored locally.
+
+## Verify taxonomy and navigation
+
+```bash
+node scripts/verify-explore.mjs
+```
+
+The icon component uses Iconify's `lucide:*` identifiers and a bundled SVG symbol sheet at `public/iconify-lucide.svg`, so no icon service or runtime dependency is needed.
