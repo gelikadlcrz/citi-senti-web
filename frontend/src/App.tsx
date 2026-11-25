@@ -5,6 +5,7 @@ import { AspectCategoriesPage } from "./pages/AspectCategoriesPage";
 import { HowItWorksPage } from "./pages/HowItWorksPage";
 import { AboutPage } from "./pages/AboutPage";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
+import { PublicInsightsPage } from "./pages/PublicInsightsPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
 import "./App.css";
 
@@ -38,10 +39,7 @@ function App() {
             path={paths.contribute}
             element={<PlaceholderPage title="Contribute Feedback" />}
           />
-          <Route
-            path={paths.insights}
-            element={<PlaceholderPage title="Public Insights" />}
-          />
+          <Route path={paths.insights} element={<PublicInsightsPage />} />
           <Route
             path="*"
             element={<PlaceholderPage title="Page not found" />}
