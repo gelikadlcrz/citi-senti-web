@@ -1,0 +1,11 @@
+
+-r requirements.txt
+
+# Glot500-m inference
+torch>=2.6,<3
+transformers==4.57.6
+accelerate>=1.3,<2
+sentencepiece>=0.2,<0.3
+safetensors>=0.6,<1
+protobuf
+numpy>=1.26,<3
