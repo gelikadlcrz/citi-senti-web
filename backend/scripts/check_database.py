@@ -5,8 +5,7 @@ from pathlib import Path
 import psycopg
 from dotenv import load_dotenv
 
-load_dotenv(Path(__file__).with_name(".env"))
-
+load_dotenv(Path(__file__).resolve().parents[2] / "backend" / ".env")
 database_url = os.environ["DATABASE_URL"]
 
 with psycopg.connect(database_url, connect_timeout=10) as conn:
