@@ -7,6 +7,7 @@ import { AboutPage } from "./pages/AboutPage";
 import { AdminLoginPage } from "./pages/AdminLoginPage";
 import { PublicInsightsPage } from "./pages/PublicInsightsPage";
 import { PlaceholderPage } from "./pages/PlaceholderPage";
+import { AnalyzeFeedbackPage } from "./pages/AnalyzeFeedbackPage";
 import "./App.css";
 
 function App() {
@@ -22,7 +23,10 @@ function App() {
             </Layout>
           }
         >
-          <Route path="/" element={<Navigate replace to={paths.aspects} />} />
+          <Route
+            path="/"
+            element={<Navigate replace to={paths.analyze} />}
+          />          
           <Route
             path="/explore"
             element={<Navigate replace to={paths.aspects} />}
@@ -33,7 +37,7 @@ function App() {
           {/* Temporary route placeholders: replace these when teammates add the actual pages. */}
           <Route
             path={paths.analyze}
-            element={<PlaceholderPage title="Analyze Feedback" />}
+            element={<AnalyzeFeedbackPage />}
           />
           <Route
             path={paths.contribute}

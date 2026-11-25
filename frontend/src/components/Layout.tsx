@@ -9,7 +9,7 @@ export function Layout({ children }: { children: ReactNode }) {
   const explore =
     location.pathname.startsWith("/explore") || location.pathname === "/";
   const placeholderHeading: Record<string, string> = {
-    "/analyze-feedback": "Analyze Feedback",
+    "/analyze-feedback": "Analyze Citizen Feedback",
     "/contribute-feedback": "Contribute Feedback",
     "/public-insights": "Public Insights",
     "/admin/login": "Admin Login",
@@ -18,6 +18,7 @@ export function Layout({ children }: { children: ReactNode }) {
     ? "Explore CITI-Senti"
     : (placeholderHeading[location.pathname] ?? "CITI-Senti");
   const pageSubheading: Record<string, string> = {
+    "/analyze-feedback": "Try the multilingual aspect-based sentiment analyzer.",
     "/public-insights":
       "Privacy-safe, aggregated statistics from eligible approved feedback.",
   };
