@@ -17,15 +17,24 @@ export function getAspectName(code: string): string {
   return aspects.find((aspect) => aspect.code === code)?.name ?? code
 }
 
+export function truncationNotice(result: AnalysisResult): string | null {
+  const { acd, acsa_aspects } = result.truncation
+  if (!acd && !acsa_aspects.length) return null
+  const affected = [acd ? 'aspect detection' : '', acsa_aspects.length ? `sentiment classification (${acsa_aspects.join(', ')})` : ''].filter(Boolean).join(' and ')
+  return `Part of your comment exceeded the model’s token limit and was not analyzed during ${affected}. Results may be incomplete. Try a shorter comment for fuller coverage.`
+}
+
 export function formatAnalysisResults(result: AnalysisResult): string {
   const counts = summarizePredictions(result)
   const rows = [...result.predictions].sort((a, b) => a.aspect_code.localeCompare(b.aspect_code))
     .map(({ aspect_code, sentiment }) => `${aspect_code} — ${getAspectName(aspect_code)}: ${sentimentLabels[sentiment]}`)
+  const notice = truncationNotice(result)
   return [
     'CITI-Senti — Analysis Results', '', 'Your Comment:', result.comment, '',
     `Detected aspects: ${result.predictions.length}`,
     `Positive: ${counts.positive} | Neutral: ${counts.neutral} | Negative: ${counts.negative}`, '',
     ...(rows.length ? rows : ['No aspect categories detected.']), '',
+    ...(notice ? [`Notice: ${notice}`, ''] : []),
     `Model: ${result.model_version}`, 'Model predictions, not verified findings.',
   ].join('\n')
 }

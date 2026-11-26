@@ -45,3 +45,5 @@
 @media (max-width:850px) {.analysis-input-page {padding:18px 0;min-height:calc(100vh - 153px);}.analysis-composer {padding:20px;}}
 @media (max-width:600px) {.analysis-intro {margin-bottom:24px;}.analysis-composer-actions {flex-wrap:wrap;gap:8px;}.analysis-sample-control {flex:1 0 60%;}.analysis-composer .analysis-button {min-height:44px;flex:1;}.analysis-button {padding:0 15px;}.analysis-privacy {align-items:flex-start;}.analysis-composer textarea {min-height:175px;}.analysis-sample-button {padding-left:0;}.analysis-sample-button .ui-icon:last-child {margin-left:0;}}
 @media (prefers-reduced-motion:reduce) {.analysis-spinner {animation:none;}}
+
+.analysis-processing-note {margin:12px 0 0;font-size:13px;line-height:1.5;color:var(--muted);}

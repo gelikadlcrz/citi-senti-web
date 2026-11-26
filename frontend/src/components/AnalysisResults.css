@@ -38,3 +38,8 @@
 .analysis-copy-fallback textarea {width:100%;min-height:150px;padding:12px;border:1px solid var(--border);border-radius:12px;resize:vertical;color:var(--ink);background:#fff;}
 @media(max-width:850px) {.analysis-sentiment-grid {gap:12px;}.analysis-sentiment-card {padding:15px;gap:12px;}.analysis-detected {min-height:0;}.analysis-original-comment {padding:22px;}}
 @media(max-width:600px) {.analysis-results-page {gap:14px;padding-top:0;}.analysis-sentiment-grid {gap:8px;}.analysis-sentiment-card {min-height:98px;padding:12px 8px;gap:6px;justify-content:center;flex-wrap:wrap;text-align:center;}.analysis-sentiment-dot {width:22px;height:22px;flex-basis:22px;}.analysis-sentiment-dot::after {width:14px;height:14px;}.analysis-sentiment-title {font-size:13px;}.analysis-sentiment-number {font-size:30px;}.analysis-completed {padding:16px;gap:12px;}.analysis-completed>.ui-icon {width:32px;height:32px;}.analysis-detected {padding:18px 14px;}.analysis-completed h2,.analysis-detected h2 {font-size:20px;}.analysis-results-table {font-size:12px;}.analysis-results-table th,.analysis-results-table td {padding:9px 6px;}.analysis-code-pill,.analysis-sentiment-pill {padding:4px 8px;font-size:11px;}.analysis-results-actions {gap:10px;}.analysis-results-actions .secondary {flex:1;}.analysis-contribute-button {flex:1 0 100%;margin-left:0;}.analysis-original-comment {min-height:100px;}}
+
+.analysis-truncation-notice {display:flex;gap:12px;align-items:flex-start;border:1px solid #d9c898;background:#faf6e9;border-radius:14px;padding:15px 18px;color:var(--ink);}
+.analysis-truncation-notice>.ui-icon {color:#92742b;flex-shrink:0;}
+.analysis-truncation-notice strong {font-size:14px;}
+.analysis-truncation-notice p {margin:3px 0 0;font-size:13px;line-height:1.6;}

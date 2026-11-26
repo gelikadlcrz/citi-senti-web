@@ -115,7 +115,7 @@ export function AnalyzeFeedbackPage() {
           </button>
         </div>
         {error && <p className="analysis-error" role="alert">{error}</p>}
-        <p className="analysis-sr-only" role="status">{busy ? 'Analyzing your comment. Model loading may take a moment.' : ''}</p>
+        <p className={busy ? 'analysis-processing-note' : 'analysis-sr-only'} role="status">{busy ? 'Analyzing your comment. The first request or sequential model loading may take longer. Please keep this page open.' : ''}</p>
       </form>
       <p className="analysis-privacy"><IconifyIcon icon="lucide:info" size={21} />Analysis is temporary. Comments are not added to Public Insights unless you contribute them.</p>
     </div>

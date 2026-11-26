@@ -7,6 +7,7 @@ export type AnalysisResult = {
   predictions: AspectPrediction[]
   model_version: string
   mode: 'live'
+  truncation: { acd: boolean; acsa_aspects: string[] }
 }
 
 export const COMMENT_LIMIT = 1000
@@ -24,11 +25,16 @@ export function isAnalysisResult(value: unknown): value is AnalysisResult {
   const result = value as Partial<AnalysisResult>
   if (typeof result.comment !== 'string' || typeof result.model_version !== 'string' || !result.model_version.trim() || result.mode !== 'live' || !Array.isArray(result.predictions)) return false
   const seen = new Set<string>()
-  return result.predictions.every((prediction) => {
+  const validPredictions = result.predictions.every((prediction) => {
     if (!prediction || typeof prediction !== 'object' || !aspects.some((aspect) => aspect.code === prediction.aspect_code) || seen.has(prediction.aspect_code) || !['positive', 'neutral', 'negative'].includes(prediction.sentiment)) return false
     seen.add(prediction.aspect_code)
     return true
   })
+  const truncation = result.truncation
+  return validPredictions && !!truncation && typeof truncation.acd === 'boolean' &&
+    Array.isArray(truncation.acsa_aspects) &&
+    truncation.acsa_aspects.every((code) => typeof code === 'string' && seen.has(code)) &&
+    new Set(truncation.acsa_aspects).size === truncation.acsa_aspects.length
 }
 
 export async function analyzeComment(comment: string, signal: AbortSignal): Promise<AnalysisResult> {
@@ -36,6 +42,7 @@ export async function analyzeComment(comment: string, signal: AbortSignal): Prom
   try {
     response = await fetch('/api/v1/analysis', {
       method: 'POST',
+      cache: 'no-store',
       signal,
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ comment }),

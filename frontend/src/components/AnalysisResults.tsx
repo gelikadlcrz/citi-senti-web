@@ -4,7 +4,7 @@ import { IconifyIcon } from './IconifyIcon'
 import { paths } from './Sidebar'
 import { useAnalysisFlow } from './AnalysisFlowContext'
 import type { AnalysisResult } from '../services/analysis'
-import { formatAnalysisResults, getAspectName, sentimentLabels, sentimentOrder, summarizePredictions } from '../services/analysisResults'
+import { formatAnalysisResults, getAspectName, sentimentLabels, sentimentOrder, summarizePredictions, truncationNotice } from '../services/analysisResults'
 import './AnalysisResults.css'
 
 export function AnalysisResults({ result, onClear }: { result: AnalysisResult; onClear: () => void }) {
@@ -14,6 +14,7 @@ export function AnalysisResults({ result, onClear }: { result: AnalysisResult; o
   const [copyStatus, setCopyStatus] = useState<'idle' | 'copied' | 'failed'>('idle')
   const counts = summarizePredictions(result)
   const total = result.predictions.length
+  const notice = truncationNotice(result)
   const predictions = [...result.predictions].sort((a, b) => a.aspect_code.localeCompare(b.aspect_code))
 
   useLayoutEffect(() => {
@@ -51,6 +52,10 @@ export function AnalysisResults({ result, onClear }: { result: AnalysisResult; o
           <p>{total} aspect {total === 1 ? 'category' : 'categories'} detected · Sentiments are assigned per aspect</p>
         </div>
       </section>
+      {notice && <aside className="analysis-truncation-notice" aria-label="Input limit notice">
+        <IconifyIcon icon="lucide:info" size={21} />
+        <div><strong>Comment partially analyzed</strong><p>{notice}</p></div>
+      </aside>}
       <section className="analysis-sentiment-grid" aria-label="Sentiment summary">
         {sentimentOrder.map((sentiment) => (
           <div key={sentiment} className={`panel analysis-sentiment-card ${sentiment}`}>
