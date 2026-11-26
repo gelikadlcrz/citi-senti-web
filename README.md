@@ -2,79 +2,100 @@
 
 **Citizen Feedback Intelligence via Glot500-m for Trilingual Aspect-Based Sentiment Analysis in Baguio City**
 
-CITI-Senti is a research-based web application designed to analyze multilingual citizen feedback concerning local government policies, ordinances, resolutions, programs, services, and public issues in Baguio City.
+CITI-Senti is an academic research web application for analyzing citizen feedback about local government policies, ordinances, resolutions, programs, services, and public issues in Baguio City. It supports English, Tagalog, Ilocano, and code-switched comments.
 
-The project applies Aspect-Based Sentiment Analysis (ABSA) using a fine-tuned Glot500-m multilingual language model to identify policy-related aspect categories and classify their corresponding sentiments as **Positive, Neutral, or Negative**.
+Unlike document-level sentiment analysis, CITI-Senti detects multiple policy-related aspects in a comment and predicts a separate sentiment for each detected aspect. The live analysis feature uses fine-tuned Glot500-m checkpoints; training, baseline experiments (Logistic Regression and Linear SVM), and research evaluation are maintained separately in the NLP repository.
 
-CITI-Senti focuses on feedback expressed in **English, Tagalog, and Ilocano**, including code-switched comments, to support a more detailed understanding of citizen perspectives in a linguistically diverse environment.
+## Project objectives
 
-## Project Objectives
+- Develop a trilingual aspect-based sentiment analysis approach for citizen feedback.
+- Evaluate fine-tuned Glot500-m against traditional machine learning baselines.
+- Provide a web interface for temporary analysis and voluntary feedback contribution.
+- Support systematic examination of public concerns through aggregated feedback insights.
 
-The project aims to:
+## Application scope
 
-- Develop a multilingual aspect-based sentiment analysis approach for citizen feedback concerning local governance in Baguio City.
-- Fine-tune Glot500-m for multi-label aspect-category detection and aspect-level sentiment classification.
-- Evaluate the proposed approach against Logistic Regression and Linear Support Vector Machine (SVM) baselines.
-- Develop a web-based platform that allows users to analyze multilingual feedback and voluntarily contribute their comments.
-- Present aggregated aspect and sentiment insights that may support the systematic examination of public concerns and perceptions of local government initiatives.
+| Area | Purpose |
+| --- | --- |
+| Analyze Feedback | Enter a comment, run live aspect and sentiment inference, view and copy results. |
+| Contribute Feedback | Voluntarily submit feedback with consent; manage contributions through the contribution workflow. |
+| Public Insights | Present aggregated statistics from eligible feedback, with appropriate privacy safeguards. |
+| Explore CITI-Senti | Explain the aspect taxonomy, analysis workflow, limitations, and research background. |
+| Administration | Authenticate administrators and support feedback review, moderation, and reporting. |
 
-## Key Features
+**Development status:** The analysis and results workflow is implemented in the analysis feature branch. Explore pages are present. Contribution, insights, administration, and deployment are separate workstreams; this overview describes project scope, not a guarantee that every feature is implemented or deployed. See [architecture and integration boundaries](docs/ARCHITECTURE.md) for the inspected implementation.
 
-### Citizen Portal
+## Technology
 
-- **Analyze Feedback** — Analyze English, Tagalog, Ilocano, and code-switched comments to identify policy-related aspects and their corresponding sentiments.
-- **Contribute Feedback** — Voluntarily submit feedback and securely view, edit, or delete contributions without creating an account.
-- **Public Insights** — Explore aggregated feedback statistics, aspect frequencies, and sentiment distributions.
-- **Aspect Categories** — View the 11 predefined categories used to organize policy-related concerns.
-- **How It Works** — Learn about the multilingual analysis process, interpretation of predictions, and model limitations.
-- **About CITI-Senti** — Explore the project's background, objectives, significance, and research information.
+| Layer | Technology |
+| --- | --- |
+| Frontend | React, TypeScript, Vite, React Router, TanStack Query |
+| Backend | Python, FastAPI, Pydantic |
+| Model inference | Glot500-m, PyTorch, Hugging Face Transformers, SentencePiece, Safetensors |
+| Database | Supabase-hosted PostgreSQL, psycopg, SQL migrations |
+| Development | pnpm, Oxlint, TypeScript compiler, Python unittest |
 
-### Admin Portal
+## Getting started
 
-- **Admin Dashboard** — Monitor feedback submissions, processing activity, and overall sentiment patterns.
-- **Feedback Management** — Review, moderate, and organize citizen submissions and associated policy information.
-- **Policy Insights and Reports** — Analyze policy-specific feedback, compare sentiment patterns, examine trends, and export analytical data.
+For the full instructions, including prerequisites, model artifacts, environment variables, and database setup, see the [local development guide](docs/LOCAL_DEVELOPMENT.md).
 
-## Aspect-Based Sentiment Analysis
+### Backend
 
-Unlike conventional sentiment analysis, which typically assigns a single sentiment to an entire comment, CITI-Senti identifies multiple policy-related aspects within the same text and predicts the sentiment associated with each detected category.
+From the repository root, assuming Python and the trained artifacts are already available:
 
-The system uses 11 predefined aspect categories:
+```bash
+cd backend
+python -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-model.txt
+```
 
-| Code | Aspect Category |
-|---|---|
-| A01 | Policy Benefits and Impact |
-| A02 | Implementation and Enforcement |
-| A03 | Cost, Fees and Penalties |
-| A04 | Accessibility and Convenience |
-| A05 | Fairness and Inclusivity |
-| A06 | Rules and Policy Provisions |
-| A07 | Government Administration and Responsiveness |
-| A08 | Public Safety and Security |
-| A09 | Environmental Impact |
-| A10 | Traffic and Transportation Impact |
-| A11 | Other |
+For regular backend development without live inference, use `requirements.txt` instead. Configure `backend/.env` as described in the setup guide. For live analysis, verify the checkpoints before starting the server:
 
-Each detected aspect is classified as **Positive, Neutral, or Negative**, allowing comments discussing multiple concerns to be analyzed at the aspect-category level.
+```bash
+python -m scripts.check_models --metadata-only
+python -m scripts.check_models
+fastapi dev app/main.py
+```
 
-## Research Scope
+If an existing compatible virtual environment is already configured, reuse it rather than recreating it.
 
-CITI-Senti focuses on textual citizen feedback relevant to local governance in Baguio City. It supports multilingual and code-switched expressions involving English, Tagalog, and Ilocano.
+### Frontend
 
-The research evaluates fine-tuned Glot500-m against traditional machine learning baselines using precision, recall, and Macro-F1 score, including additional analysis across the three languages.
+In a separate terminal, from the repository root:
 
-The web application is intended to use the selected fine-tuned Glot500-m model for live feedback analysis. Model training and experimental evaluation are maintained separately from the web application.
+```bash
+cd frontend
+pnpm install --frozen-lockfile
+pnpm dev
+```
 
-## Project Status
+| Service | Local address |
+| --- | --- |
+| Citizen portal | http://localhost:5173/analyze-feedback |
+| Backend API | http://127.0.0.1:8000 |
+| API documentation (Swagger) | http://127.0.0.1:8000/docs |
+| Health endpoint | http://127.0.0.1:8000/api/v1/health |
 
-**In Development**
+The Vite development proxy forwards `/api` requests to FastAPI. Temporary analysis does not require a database connection; persistent feedback and other database-backed features do.
 
-CITI-Senti is currently under active research and development. Application features, model integration, database implementation, and deployment are being developed progressively.
+## Documentation
+
+| Guide | Contents |
+| --- | --- |
+| [Local development](docs/LOCAL_DEVELOPMENT.md) | Installation, model artifacts, environment configuration, running the application, troubleshooting |
+| [System architecture](docs/ARCHITECTURE.md) | Repository organization, routes, component responsibilities, data flow and integration boundaries |
+| [Analysis developer guide](docs/ANALYSIS_DEVELOPMENT.md) | Model behavior, API contract, truncation, frontend state and contribution handoff |
+| [Database](docs/DATABASE.md) | Schema, migrations, dev/prod separation and research corpus seeding |
+| [Testing and contribution](docs/TESTING.md) | Automated and manual checks, release criteria and Git workflow |
+| [Frontend](frontend/README.md) | Frontend-specific commands, routes and conventions |
+
+## Research and privacy
+
+The model's predictions are automated estimates, not verified factual findings. Multiple detected aspects can have different sentiments. A comment may produce no detected aspects, and a long comment may be partially analyzed due to model token limits. Public statistics should not be interpreted as representative of the entire population of Baguio City.
+
+Temporary analysis does not persist feedback or predictions in PostgreSQL. Contribution is a separate consent-based workflow. Do not commit credentials, trained weights, private corpus files, or environment directories.
 
 ## Disclaimer
 
-CITI-Senti is an academic research project and is not an official platform of the Baguio City Government.
-
-The system's predictions are generated through automated natural language processing and may contain inaccuracies. Aggregated findings reflect the feedback collected through the platform and should not be interpreted as representative of the entire population of Baguio City.
-
-The application is intended to support research and the interpretation of citizen feedback, not to make official government decisions.
+CITI-Senti is an academic research project and is not affiliated with or an official platform of the City Government of Baguio. It is intended to support research and interpretation of citizen feedback, not to make official government decisions.
