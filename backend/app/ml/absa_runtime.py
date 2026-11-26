@@ -194,6 +194,14 @@ def load_acsa(model_dir: Path, device: torch.device) -> ACSAHandle:
     return ACSAHandle(model, tokenizer, max_len, device)
 
 
+def input_would_truncate(handle: ACDHandle | ACSAHandle, text: str, *, aspect_code: str | None = None) -> bool:
+    """Measure the untruncated sequence, including special tokens and paired prompt."""
+    kwargs = {"text_pair": aspect_prompt(aspect_code)} if aspect_code is not None else {}
+    encoded = handle.tokenizer(text, add_special_tokens=True, truncation=False,
+                               padding=False, verbose=False, **kwargs)
+    return len(encoded["input_ids"]) > handle.max_length
+
+
 @torch.inference_mode()
 def infer_acd(handle: ACDHandle, texts: list[str], batch_size: int = 2) -> np.ndarray:
     if not texts:

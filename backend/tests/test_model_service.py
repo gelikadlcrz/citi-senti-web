@@ -22,6 +22,7 @@ class ServiceTests(unittest.TestCase):
         runtime = Mock()
         engine._runtime = runtime
         runtime.load_acd.return_value = SimpleNamespace(order=('A01','A04','A10'), thresholds=np.array([.5,.7,.3]))
+        runtime.input_would_truncate.return_value = False
         runtime.infer_acd.return_value = np.array([[.49,.7,.4]])
         runtime.infer_acsa.return_value = np.array([[.8,.1,.1],[.1,.2,.7]])
         return engine, runtime
@@ -69,6 +70,36 @@ class ServiceTests(unittest.TestCase):
         self.assertEqual(engine.predict('test')['predictions'], [])
         runtime.load_acsa.assert_not_called()
         runtime.infer_acsa.assert_not_called()
+
+    def test_tokenizer_length_includes_pair_and_special_tokens(self):
+        from app.ml.absa_runtime import input_would_truncate
+        tokenizer = Mock()
+        handle = SimpleNamespace(tokenizer=tokenizer, max_length=128)
+        tokenizer.return_value = {'input_ids': list(range(128))}
+        self.assertFalse(input_would_truncate(handle, 'comment'))
+        tokenizer.assert_called_once_with('comment', add_special_tokens=True,
+                                          truncation=False, padding=False, verbose=False)
+        tokenizer.reset_mock()
+        tokenizer.return_value = {'input_ids': list(range(129))}
+        self.assertTrue(input_would_truncate(handle, 'comment', aspect_code='A10'))
+        tokenizer.assert_called_once_with('comment', add_special_tokens=True,
+            truncation=False, padding=False, verbose=False,
+            text_pair='Aspect: A10 — Traffic and Transportation Impact')
+
+    def test_truncation_flags_follow_actual_stages(self):
+        engine, runtime = self.make_engine('sequential')
+        runtime.input_would_truncate.side_effect = [True, False, True]
+        result = engine.predict('long comment')
+        self.assertEqual(result['truncation'], {'acd': True, 'acsa_aspects': ['A10']})
+        self.assertEqual(runtime.input_would_truncate.call_count, 3)
+        self.assertEqual(len(result['predictions']), 2)
+
+    def test_no_aspect_truncation(self):
+        engine, runtime = self.make_engine('sequential')
+        runtime.infer_acd.return_value = np.zeros((1,3))
+        runtime.input_would_truncate.return_value = True
+        self.assertEqual(engine.predict('long comment')['truncation'], {'acd': True, 'acsa_aspects': []})
+        runtime.load_acsa.assert_not_called()
 
     def test_loading_failure(self):
         engine, runtime = self.make_engine('resident')

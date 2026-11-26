@@ -19,7 +19,8 @@ class AnalysisApiTests(unittest.TestCase):
 
     def response(self, predictions):
         return {"comment": "Sample", "predictions": predictions,
-                "model_version": "test-model", "mode": "live"}
+                "model_version": "test-model", "mode": "live",
+                "truncation": {"acd": False, "acsa_aspects": []}}
 
     def test_health(self):
         response = self.client.get("/api/v1/health")
@@ -33,7 +34,23 @@ class AnalysisApiTests(unittest.TestCase):
         response = self.client.post("/api/v1/analysis", json={"comment": "  Sample  "})
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json(), expected)
+        self.assertEqual(response.headers["cache-control"], "no-store")
         self.engine.predict.assert_called_once_with("Sample")
+
+    def test_truncation_metadata(self):
+        self.engine.predict.return_value = {**self.response([{"aspect_code": "A10", "sentiment": "positive"}]),
+            "truncation": {"acd": True, "acsa_aspects": ["A10"]}}
+        response = self.client.post("/api/v1/analysis", json={"comment": "Sample"})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()["truncation"], {"acd": True, "acsa_aspects": ["A10"]})
+
+    def test_invalid_truncation_metadata(self):
+        for value in ({"acd": "false", "acsa_aspects": []},
+                      {"acd": False, "acsa_aspects": ["A02"]},
+                      {"acd": False, "acsa_aspects": ["A10", "A10"]}, None):
+            with self.subTest(value=value):
+                self.engine.predict.return_value = {**self.response([{"aspect_code": "A10", "sentiment": "positive"}]), "truncation": value}
+                self.assertEqual(self.client.post("/api/v1/analysis", json={"comment": "Sample"}).status_code, 500)
 
     def test_invalid_comments(self):
         for body in ({}, {"comment": ""}, {"comment": " \n "},

@@ -127,6 +127,7 @@ class AnalysisService:
             runtime = self._runtime
             import numpy as np
             try:
+                acd_truncated = runtime.input_would_truncate(self.acd, text)
                 order = self.acd.order
                 scores = runtime.infer_acd(self.acd, [text], batch_size=self.acd_batch_size)
                 if scores.shape != (1, len(order)) or not np.isfinite(scores).all():
@@ -138,6 +139,7 @@ class AnalysisService:
                     runtime.release_handle(self.acd)
                     self.acd = None
             predictions = []
+            acsa_truncated_aspects = []
             if codes:
                 if self.mode == 'sequential':
                     try:
@@ -146,6 +148,7 @@ class AnalysisService:
                         logger.exception('Glot500-m ACSA load failed')
                         raise ModelUnavailable('Analysis model is unavailable.') from exc
                 try:
+                    acsa_truncated_aspects = [code for code in codes if runtime.input_would_truncate(self.acsa, text, aspect_code=code)]
                     distributions = runtime.infer_acsa(self.acsa, [(text, code) for code in codes], batch_size=self.acsa_batch_size)
                     if distributions.shape != (len(codes), len(SENTIMENT_LABELS)) or not np.isfinite(distributions).all():
                         raise ValueError('Invalid ACSA prediction array')
@@ -155,7 +158,8 @@ class AnalysisService:
                     if self.mode == 'sequential':
                         runtime.release_handle(self.acsa)
                         self.acsa = None
-            return {'comment': text, 'predictions': predictions, 'model_version': self.version, 'mode': 'live'}
+            return {'comment': text, 'predictions': predictions, 'model_version': self.version, 'mode': 'live',
+                    'truncation': {'acd': acd_truncated, 'acsa_aspects': acsa_truncated_aspects}}
 
 
 service = AnalysisService()

@@ -2,8 +2,8 @@
 import logging
 from typing import Literal
 
-from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel, Field, field_validator
+from fastapi import APIRouter, Depends, HTTPException, Response
+from pydantic import BaseModel, Field, StrictBool, field_validator, model_validator
 
 from app.ml.labels import ASPECT_CODES
 from app.ml.service import AnalysisService, ModelUnavailable, service
@@ -35,11 +35,24 @@ class Prediction(BaseModel):
         return value
 
 
+class TruncationInfo(BaseModel):
+    acd: StrictBool
+    acsa_aspects: list[str]
+
+
 class AnalysisResponse(BaseModel):
     comment: str
     predictions: list[Prediction]
     model_version: str = Field(min_length=1)
     mode: Literal["live"]
+    truncation: TruncationInfo
+
+    @model_validator(mode="after")
+    def valid_truncation(self):
+        codes = self.truncation.acsa_aspects
+        if len(codes) != len(set(codes)) or not set(codes).issubset({p.aspect_code for p in self.predictions}):
+            raise ValueError("Invalid truncated aspect codes")
+        return self
 
     @field_validator("predictions")
     @classmethod
@@ -62,13 +75,15 @@ def get_analysis_service() -> AnalysisService:
 )
 def analyze(
     request: AnalysisRequest,
+    response: Response,
     engine: AnalysisService = Depends(get_analysis_service),
 ) -> AnalysisResponse:
+    response.headers["Cache-Control"] = "no-store"
     try:
         return AnalysisResponse.model_validate(engine.predict(request.comment))
     except ModelUnavailable:
-        raise HTTPException(status_code=503, detail="Analysis model is unavailable.") from None
+        raise HTTPException(status_code=503, detail="Analysis model is unavailable.", headers={"Cache-Control": "no-store"}) from None
     except Exception:
         # Do not expose internal paths, errors or submitted text to the client.
         logger.error("Feedback inference or response validation failed")
-        raise HTTPException(status_code=500, detail="Analysis failed.") from None
+        raise HTTPException(status_code=500, detail="Analysis failed.", headers={"Cache-Control": "no-store"}) from None
